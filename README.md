@@ -47,6 +47,12 @@ Run the realtime server for online friend mode:
 pnpm dev:realtime
 ```
 
+Or run the realtime server with Docker Compose:
+
+```bash
+docker compose up --build realtime-server
+```
+
 The web app proxies `/api/*` to the Worker at `http://localhost:8787`.
 Online friend mode connects to Socket.IO at `http://localhost:4000`.
 

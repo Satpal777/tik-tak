@@ -1,0 +1,11 @@
+services:
+  realtime-server:
+    build:
+      context: .
+      dockerfile: apps/realtime-server/Dockerfile
+    environment:
+      PORT: "4000"
+      CLIENT_ORIGIN: "https://tik-tak.pages.dev"
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
