@@ -13,8 +13,8 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
-    "deploy:web": "pnpm build:web && pnpm --filter @tik-tak/worker exec wrangler pages deploy ../../apps/web/dist",
-    "deploy:worker": "pnpm --filter @tik-tak/worker deploy"
+    "deploy:web": "pnpm build:web && pnpm --filter @tik-tak/worker exec wrangler pages deploy ../../apps/web/dist --config ../../apps/web/wrangler.jsonc",
+    "deploy:worker": "pnpm --filter @tik-tak/worker run deploy"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

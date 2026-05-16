@@ -11,7 +11,6 @@ import { createRoomId, getRoomIdFromUrl, replaceOnlineRoomUrl } from "../lib/roo
 import type { GamePageProps } from "../types"
 
 const realtimeUrl = import.meta.env.VITE_REALTIME_URL ?? "http://localhost:4000"
-
 export function WithOnlineFriend({ board, setBoard, onBack }: GamePageProps) {
   const [roomId, setRoomId] = useState<string | null>(null)
   const [shareUrl, setShareUrl] = useState("")
