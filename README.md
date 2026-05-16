@@ -86,7 +86,7 @@ Response:
 }
 ```
 
-The Worker uses Cloudflare Workers AI model `@cf/meta/llama-3.1-8b-instruct`. The AI binding is configured in `apps/worker/wrangler.jsonc`:
+The Worker uses Cloudflare Workers AI model `@cf/meta/llama-3.3-70b-instruct-fp8-fast` for streamed analysis. The AI binding is configured in `apps/worker/wrangler.jsonc`:
 
 ```jsonc
 "ai": {
@@ -97,10 +97,31 @@ The Worker uses Cloudflare Workers AI model `@cf/meta/llama-3.1-8b-instruct`. Th
 ## Commands
 
 ```bash
+pnpm build:web
 pnpm build
 pnpm lint
 pnpm typecheck
+pnpm deploy:web
 pnpm deploy:worker
+```
+
+## Cloudflare Pages Deployment
+
+This repository is a pnpm workspace. Configure Cloudflare Pages from the repository root so npm does not try to install `workspace:*` dependencies from `apps/web`.
+
+Use these Pages build settings:
+
+```txt
+Root directory: /
+Build command: pnpm build:web
+Build output directory: apps/web/dist
+Build system: V2
+```
+
+If Cloudflare still picks npm, set the install command to:
+
+```bash
+corepack enable && pnpm install --frozen-lockfile
 ```
 
 ## Architecture Notes
@@ -109,4 +130,4 @@ pnpm deploy:worker
 - The Worker uses native `fetch` handlers only. There is no Express, Hono, or server framework in the AI path.
 - Shared board rules live in `packages/game-engine`, so frontend, Worker, and future realtime server use the same validation.
 - `apps/realtime-server` is intentionally separate from AI. It is reserved for future Socket.IO rooms, matchmaking, presence, and board synchronization.
-- The Worker validates board input and checks that AI moves are legal. If the model returns an invalid move, the Worker falls back to deterministic game-engine logic.
+- The Worker validates board input and returns the game engine's minimax move for perfect play. Workers AI can still be used for streamed analysis.

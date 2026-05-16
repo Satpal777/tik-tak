@@ -122,21 +122,66 @@ export function getGameState(board: Board, currentTurn: PlayerMark): GameState {
 }
 
 export function findBestDeterministicMove(board: Board, aiPlayer: PlayerMark): Move | null {
-  const availableMoves = getAvailableMoves(board)
-  const opponent = getOpponent(aiPlayer)
+  const availableMoves = prioritizeMoves(getAvailableMoves(board))
+  const currentState = getGameState(board, aiPlayer)
 
-  return (
-    findWinningMove(board, aiPlayer, availableMoves) ??
-    findWinningMove(board, opponent, availableMoves) ??
-    availableMoves.find((move) => move.row === 1 && move.col === 1) ??
-    availableMoves.find((move) => isCorner(move)) ??
-    availableMoves[0] ??
-    null
-  )
+  if (currentState.status !== "playing") {
+    return null
+  }
+
+  let bestMove: Move | null = null
+  let bestScore = -Infinity
+
+  for (const move of availableMoves) {
+    const score = minimax(applyMove(board, move, aiPlayer), getOpponent(aiPlayer), aiPlayer, 1)
+
+    if (score > bestScore) {
+      bestMove = move
+      bestScore = score
+    }
+  }
+
+  return bestMove
 }
 
-function findWinningMove(board: Board, player: PlayerMark, moves: Move[]): Move | null {
-  return moves.find((move) => getWinner(applyMove(board, move, player)) === player) ?? null
+function minimax(board: Board, currentPlayer: PlayerMark, aiPlayer: PlayerMark, depth: number): number {
+  const winner = getWinner(board)
+
+  if (winner === aiPlayer) {
+    return 10 - depth
+  }
+
+  if (winner === getOpponent(aiPlayer)) {
+    return depth - 10
+  }
+
+  const availableMoves = prioritizeMoves(getAvailableMoves(board))
+
+  if (availableMoves.length === 0) {
+    return 0
+  }
+
+  const scores = availableMoves.map((move) =>
+    minimax(applyMove(board, move, currentPlayer), getOpponent(currentPlayer), aiPlayer, depth + 1),
+  )
+
+  return currentPlayer === aiPlayer ? Math.max(...scores) : Math.min(...scores)
+}
+
+function prioritizeMoves(moves: Move[]): Move[] {
+  return [...moves].sort((first, second) => getMovePriority(first) - getMovePriority(second))
+}
+
+function getMovePriority(move: Move): number {
+  if (move.row === 1 && move.col === 1) {
+    return 0
+  }
+
+  if (isCorner(move)) {
+    return 1
+  }
+
+  return 2
 }
 
 function isCorner(move: Move): boolean {

@@ -2,44 +2,28 @@ import {
   findBestDeterministicMove,
   getAvailableMoves,
   getOpponent,
-  isLegalMove,
 } from "@tik-tak/game-engine"
 import type { AiMoveRequest, AiMoveResponse, Move } from "@tik-tak/types"
 import { AI_MODEL } from "./config"
 import type { Env } from "./env"
-
-type WorkersAiTextResponse = {
-  response?: string
-}
 
 type AiMessage = {
   role: "system" | "user"
   content: string
 }
 
-export async function getAiMove(request: AiMoveRequest, env: Env): Promise<AiMoveResponse> {
-  const fallbackMove = findBestDeterministicMove(request.board, request.aiPlayer)
+export async function getAiMove(request: AiMoveRequest, _env: Env): Promise<AiMoveResponse> {
+  const bestMove = findBestDeterministicMove(request.board, request.aiPlayer)
 
-  if (!fallbackMove) {
+  if (!bestMove) {
     throw new Error("No legal moves are available.")
   }
 
-  const availableMoves = getAvailableMoves(request.board)
-  const aiResponse = await env.AI.run(AI_MODEL, {
-    messages: createAiMessages(request, availableMoves),
-  })
-
-  const parsedMove = parseAiMove(aiResponse)
-
-  if (!parsedMove || !isLegalMove(request.board, parsedMove.move)) {
-    return {
-      move: fallbackMove,
-      confidence: 0.5,
-      reasoning: "Fallback move selected because the AI response was missing or illegal.",
-    }
+  return {
+    move: bestMove,
+    confidence: 1,
+    reasoning: "Perfect move selected with minimax search.",
   }
-
-  return parsedMove
 }
 
 export async function streamAiMoveAnalysis(request: AiMoveRequest, env: Env): Promise<ReadableStream> {
@@ -82,43 +66,4 @@ function createAiMessages(request: AiMoveRequest, availableMoves: Move[]): AiMes
       }),
     },
   ]
-}
-
-function parseAiMove(aiResponse: unknown): AiMoveResponse | null {
-  const content =
-    typeof aiResponse === "object" && aiResponse !== null && "response" in aiResponse
-      ? (aiResponse as WorkersAiTextResponse).response
-      : null
-
-  if (!content) {
-    return null
-  }
-
-  try {
-    const parsed = JSON.parse(content) as Partial<AiMoveResponse>
-    const move = parsed.move
-
-    if (!isMoveLike(move)) {
-      return null
-    }
-
-    return {
-      move,
-      confidence: typeof parsed.confidence === "number" ? parsed.confidence : undefined,
-      reasoning: typeof parsed.reasoning === "string" ? parsed.reasoning : undefined,
-    }
-  } catch {
-    return null
-  }
-}
-
-function isMoveLike(value: unknown): value is Move {
-  const move = value as Partial<Move>
-
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    Number.isInteger(move.row) &&
-    Number.isInteger(move.col)
-  )
 }

@@ -9,9 +9,11 @@
     "dev:web": "pnpm --filter @tik-tak/web dev",
     "dev:worker": "pnpm --filter @tik-tak/worker dev",
     "dev:realtime": "pnpm --filter @tik-tak/realtime-server dev",
+    "build:web": "pnpm --filter @tik-tak/web build",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
+    "deploy:web": "pnpm build:web && pnpm --filter @tik-tak/worker exec wrangler pages deploy ../../apps/web/dist",
     "deploy:worker": "pnpm --filter @tik-tak/worker deploy"
   },
   "devDependencies": {
