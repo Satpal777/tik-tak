@@ -1,0 +1,75 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+.output/
+.vercel/
+coverage/
+**/dist/
+**/dist-ssr/
+**/build/
+**/coverage/
+
+# TypeScript
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Cloudflare / Wrangler
+.wrangler/
+**/.wrangler/
+.dev.vars
+**/.dev.vars
+wrangler.toml.local
+
+# Env files
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+*.local
+
+# Package manager artifacts
+.pnpm-store/
+.npm/
+.yarn/
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Test / cache outputs
+.cache/
+.parcel-cache/
+.vite/
+**/.vite/
+playwright-report/
+test-results/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

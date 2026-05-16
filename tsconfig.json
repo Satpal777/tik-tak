@@ -1,0 +1,13 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./apps/web/tsconfig.app.json" },
+    { "path": "./apps/web/tsconfig.node.json" },
+    { "path": "./apps/worker/tsconfig.json" },
+    { "path": "./apps/realtime-server/tsconfig.json" },
+    { "path": "./packages/types/tsconfig.json" },
+    { "path": "./packages/game-engine/tsconfig.json" },
+    { "path": "./packages/ui/tsconfig.json" },
+    { "path": "./packages/shared/tsconfig.json" }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tik-tak-ai-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-16",
+  "vars": {
+    "CLIENT_ORIGIN": "http://localhost:5173"
+  },
+  "ai": {
+    "binding": "AI"
+  }
+}
