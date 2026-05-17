@@ -62,6 +62,12 @@ Optional web environment:
 cp apps/web/.env.example apps/web/.env
 ```
 
+Both the Worker AI API and realtime server read allowed frontend origins from `CLIENT_ORIGIN`. Use a comma-separated value when more than one frontend should be allowed:
+
+```txt
+CLIENT_ORIGIN=https://tik-tak.pages.dev,http://localhost:5173
+```
+
 ## AI Endpoint
 
 `POST /api/ai/best-move`

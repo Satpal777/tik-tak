@@ -10,7 +10,7 @@ type RoomRecord = {
 }
 
 const port = Number(process.env.PORT ?? 4000)
-const clientOrigin = process.env.CLIENT_ORIGIN ?? "http://localhost:5173"
+const clientOrigins = parseClientOrigins(process.env.CLIENT_ORIGIN ?? "http://localhost:5173")
 const rooms = new Map<string, RoomRecord>()
 
 const httpServer = createServer((request, response) => {
@@ -26,7 +26,7 @@ const httpServer = createServer((request, response) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: clientOrigin,
+    origin: clientOrigins.includes("*") ? "*" : clientOrigins,
     methods: ["GET", "POST"],
   },
 })
@@ -129,4 +129,11 @@ function toRoomState(roomId: string, room: RoomRecord): RoomState {
     roomId,
     players: room.players,
   }
+}
+
+function parseClientOrigins(clientOrigin: string): string[] {
+  return clientOrigin
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean)
 }

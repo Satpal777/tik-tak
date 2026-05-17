@@ -8,20 +8,20 @@ import { errorResponse, jsonResponse } from "./responses"
 
 export async function routeRequest(request: Request, env: Env): Promise<Response> {
   if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders(env) })
+    return new Response(null, { status: 204, headers: corsHeaders(env, request) })
   }
 
   const url = new URL(request.url)
 
   if (request.method === "GET" && url.pathname === "/health") {
-    return jsonResponse({ ok: true }, env)
+    return jsonResponse({ ok: true }, env, request)
   }
 
   if (request.method === "POST" && url.pathname === API_PATHS.aiBestMove) {
     return handleAiMove(request, env, url.searchParams.get("stream") === "true")
   }
 
-  return errorResponse("Not found.", env, 404)
+  return errorResponse("Not found.", env, request, 404)
 }
 
 async function handleAiMove(request: Request, env: Env, stream: boolean): Promise<Response> {
@@ -30,13 +30,13 @@ async function handleAiMove(request: Request, env: Env, stream: boolean): Promis
   try {
     body = await request.json()
   } catch {
-    return errorResponse("Request body must be valid JSON.", env, 400)
+    return errorResponse("Request body must be valid JSON.", env, request, 400)
   }
 
   const parsed = parseAiMoveRequest(body)
 
   if (!parsed.ok) {
-    return errorResponse(parsed.error, env, 400)
+    return errorResponse(parsed.error, env, request, 400)
   }
 
   try {
@@ -45,7 +45,7 @@ async function handleAiMove(request: Request, env: Env, stream: boolean): Promis
 
       return new Response(bodyStream, {
         headers: {
-          ...corsHeaders(env),
+          ...corsHeaders(env, request),
           "Content-Type": "text/event-stream",
         },
       })
@@ -53,11 +53,11 @@ async function handleAiMove(request: Request, env: Env, stream: boolean): Promis
 
     const aiMove = await getAiMove(parsed.request, env)
 
-    return jsonResponse(aiMove, env)
+    return jsonResponse(aiMove, env, request)
   } catch (error) {
     console.error("AI move generation failed", error)
 
-    return errorResponse("Failed to generate AI move.", env, 500)
+    return errorResponse("Failed to generate AI move.", env, request, 500)
   }
 }
 

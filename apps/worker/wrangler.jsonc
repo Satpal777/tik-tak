@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-05-16",
   "vars": {
-    "CLIENT_ORIGIN": "https://tik-tak.pages.dev"
+    "CLIENT_ORIGIN": "https://tik-tak.pages.dev,https://tiktak.satpal.cloud"
   },
   "ai": {
     "binding": "AI"

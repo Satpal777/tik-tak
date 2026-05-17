@@ -5,7 +5,7 @@ services:
       dockerfile: apps/realtime-server/Dockerfile
     environment:
       PORT: "4000"
-      CLIENT_ORIGIN: "https://tik-tak.pages.dev"
+      CLIENT_ORIGIN: "https://tik-tak.pages.dev,https://tiktak.satpal.cloud"
     ports:
       - "4000:4000"
     restart: unless-stopped
