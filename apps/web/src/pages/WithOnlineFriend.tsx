@@ -63,7 +63,7 @@ export function WithOnlineFriend({ board, setBoard, onBack }: GamePageProps) {
     })
 
     nextSocket.on("connect_error", () => {
-      setError("Realtime server is not connected. Start pnpm dev:realtime and refresh this page.")
+      setError("Realtime server is not connected.")
     })
 
     setSocket(nextSocket)

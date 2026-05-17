@@ -6,8 +6,8 @@ type LandingProps = {
 
 const gameModes = [
   {
-    title: "Play Against Computer",
-    description: "Start a single-player match against the computer.",
+    title: "Play Against AI",
+    description: "Start a single-player match against the AI.",
     path: "/computer",
   },
   {

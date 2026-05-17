@@ -10,7 +10,7 @@ import type { GamePageProps } from "../types"
 
 const computerPlayers = {
   X: createPlayerProfile("X", "You", "local-human-player"),
-  O: createPlayerProfile("O", "Computer", "ai-computer-player"),
+  O: createPlayerProfile("O", "AI", "ai-computer-player"),
 }
 
 export function WithComputer({ board, setBoard, onBack }: GamePageProps) {
@@ -70,13 +70,13 @@ export function WithComputer({ board, setBoard, onBack }: GamePageProps) {
         <button className="mb-2 text-sm font-semibold text-teal-700 hover:text-teal-900" onClick={onBack} type="button">
           Back to modes
         </button>
-        <h1 className="text-2xl font-bold sm:text-3xl">Play Against Computer</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Play Against AI</h1>
       </div>
 
       <PlayerStrip currentTurn={isAiThinking ? "O" : "X"} players={computerPlayers} />
 
       <GameStatusBanner
-        busyText="Computer is choosing a move..."
+        busyText="AI is choosing a move..."
         error={error}
         fallbackText="Your turn"
         gameState={gameState}
